@@ -52,26 +52,38 @@
         .highlight {
             background-color: green;
         }
+        .image-cell {
+            position: relative; /* Adicionado para posicionamento relativo */
+        }
         .image-cell img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .number-overlay {
             position: absolute;
-            top: 0;
+            bottom: 5px; /* Posiciona abaixo da imagem */
             left: 0;
             width: 100%;
-            height: 100%;
-            object-fit: cover; /* Garantir que a imagem cubra o espaço */
-            z-index: 1; /* Garantir que a imagem fique atrás do texto */
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: red; /* Cor do texto vermelha */
+            text-shadow: 1px 1px 2px black;
+            z-index: 2;
         }
     </style>
     <script>
         function toggleHighlight(event) {
+            // Verifica se o elemento clicado é a célula com a classe .image-cell
+            if (event.target.closest('.image-cell')) {
+                return; // Não faz nada se clicar na célula com a imagem
+            }
             event.target.classList.toggle('highlight');
         }
     </script>
 </head>
 <body>
-    <div class="header">
-        Cartela ID: <span id="cartela-id">12345</span>
-    </div>
     <div class="container">
         <table>
             <tr>
@@ -84,9 +96,9 @@
             <tr>
                 <td onclick="toggleHighlight(event)">3</td>
                 <td onclick="toggleHighlight(event)">17</td>
-                <td class="image-cell" onclick="toggleHighlight(event)">
+                <td class="image-cell">
                     <img src="https://img.freepik.com/vetores-premium/vetor-de-modelo-de-design-de-icone-de-logotipo-de-trevo_67715-371.jpg" alt="Image">
-                    <span>46</span>
+                    <span class="number-overlay">N° 1234567</span>
                 </td>
                 <td onclick="toggleHighlight(event)">65</td>
                 <td onclick="toggleHighlight(event)">83</td>
