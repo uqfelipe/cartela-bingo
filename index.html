@@ -43,6 +43,7 @@
             font-size: 60px; /* Aumentar tamanho do texto */
             background-color: white;
             cursor: pointer;
+            position: relative; /* Para posicionamento absoluto da imagem */
         }
         td {
             width: 20%;
@@ -50,6 +51,15 @@
         }
         .highlight {
             background-color: green;
+        }
+        .image-cell img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Garantir que a imagem cubra o espaço */
+            z-index: 1; /* Garantir que a imagem fique atrás do texto */
         }
     </style>
     <script>
@@ -74,7 +84,10 @@
             <tr>
                 <td onclick="toggleHighlight(event)">3</td>
                 <td onclick="toggleHighlight(event)">17</td>
-                <td onclick="toggleHighlight(event)">46</td>
+                <td class="image-cell" onclick="toggleHighlight(event)">
+                    <img src="https://img.ws.mms.shopee.com.br/br-11134207-7qukw-lk9t9e7441f577" alt="Image">
+                    <span>46</span>
+                </td>
                 <td onclick="toggleHighlight(event)">65</td>
                 <td onclick="toggleHighlight(event)">83</td>
             </tr>
