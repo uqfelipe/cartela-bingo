@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartela de Bingo</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            height: 100%;
+        }
+        th, td {
+            border: 3px solid black; /* Aumentar espessura da borda */
+            text-align: center;
+            font-size: 60px; /* Aumentar tamanho do texto */
+            background-color: white;
+            cursor: pointer;
+        }
+        td {
+            width: 20%;
+            height: 33.33%;
+        }
+        .highlight {
+            background-color: green;
+        }
+        .cartela-id {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 14px;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        function toggleHighlight(event) {
+            event.target.classList.toggle('highlight');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="cartela-id">
+            Cartela ID: <span id="cartela-id">12345</span>
+        </div>
+        <table>
+            <tr>
+                <td onclick="toggleHighlight(event)">9</td>
+                <td onclick="toggleHighlight(event)">22</td>
+                <td onclick="toggleHighlight(event)">33</td>
+                <td onclick="toggleHighlight(event)">55</td>
+                <td onclick="toggleHighlight(event)">90</td>
+            </tr>
+            <tr>
+                <td onclick="toggleHighlight(event)">3</td>
+                <td onclick="toggleHighlight(event)">17</td>
+                <td onclick="toggleHighlight(event)">46</td>
+                <td onclick="toggleHighlight(event)">65</td>
+                <td onclick="toggleHighlight(event)">83</td>
+            </tr>
+            <tr>
+                <td onclick="toggleHighlight(event)">15</td>
+                <td onclick="toggleHighlight(event)">37</td>
+                <td onclick="toggleHighlight(event)">45</td>
+                <td onclick="toggleHighlight(event)">58</td>
+                <td onclick="toggleHighlight(event)">72</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
