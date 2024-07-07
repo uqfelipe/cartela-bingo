@@ -36,13 +36,13 @@
         }
         .board {
             display: grid;
-            grid-template-columns: repeat(15, 50px);
+            grid-template-columns: repeat(15, 70px); /* Ajuste a largura das colunas */
             gap: 7px;
             margin-right: 20px;
         }
         .cell {
-            width: 50px;
-            height: 50px;
+            width: 70px; /* Ajuste a largura das células */
+            height: 70px; /* Ajuste a altura das células */
             background: radial-gradient(circle at top left, #666, #333);
             border: 2px solid #000;
             border-radius: 50%;
@@ -52,6 +52,7 @@
             justify-content: center;
             font-weight: bold;
             color: #fff;
+            font-size: 2.0em; /* Aumenta o tamanho da fonte */
             position: relative;
             cursor: pointer;
         }
@@ -138,8 +139,8 @@
             color: gold;
         }
         #clickedNumbersContainer {
-            width: 200px;
-            height: 400px;
+            width: 300px; /* Aumentar a largura */
+            height: 500px; /* Aumentar a altura */
             margin-left: 20px;
             background-color: #222;
             border: 1px solid #555;
@@ -239,6 +240,7 @@
             const clickedNumbersList = clickedNumbers.join(', ');
             const frameDoc = document.getElementById('clickedNumbersFrame').contentDocument;
             frameDoc.body.style.color = 'white'; // Cor do texto para Pedras Marcadas
+            frameDoc.body.style.fontSize = '1.5em'; // Aumenta o tamanho do texto
             frameDoc.body.innerHTML = `<h3>Pedras Marcadas:</h3><p>${clickedNumbersList}</p>`;
         }
 
