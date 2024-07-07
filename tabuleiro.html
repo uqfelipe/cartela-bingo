@@ -52,7 +52,7 @@
             justify-content: center;
             font-weight: bold;
             color: #fff;
-            font-size: 2.0em; /* Aumenta o tamanho da fonte */
+            font-size: 1.5em; /* Aumenta o tamanho da fonte */
             position: relative;
             cursor: pointer;
         }
@@ -247,7 +247,13 @@
         function checkCartelas() {
             const results = cartelas.map(cartela => {
                 const remaining = cartela.numeros.filter(num => !clickedNumbers.includes(num));
-                return { id: cartela.id, remaining: remaining.length, missingNumbers: remaining };
+                return { 
+                    id: cartela.id, 
+                    remaining: remaining.length, 
+                    missingNumbers: remaining,
+                    nome: cartela.nome,
+                    telefone: cartela.telefone
+                };
             });
 
             const completedResults = results.filter(cartela => cartela.remaining === 0);
@@ -305,7 +311,12 @@
                     tableContent += `<td class="${isActive ? 'active' : ''} ${isMissing ? 'missing' : ''}">${cartelaData.numeros[i]}</td>`;
                 }
                 tableContent += '</tr>';
-                cartelaDiv.innerHTML = `<table>${tableContent}</table><div class="cartela-id">Nº: ${cartelaData.id}</div>`;
+                cartelaDiv.innerHTML = `
+                    <table>${tableContent}</table>
+                    <div class="cartela-id">ID: ${cartelaData.id}</div>
+                    <div class="cartela-id">Nome: ${cartelaData.nome}</div>
+                    <div class="cartela-id">Telefone: ${cartelaData.telefone}</div>
+                `;
                 if (cartela.winnerNumber) {
                     cartelaDiv.innerHTML += `<div class="winner-tag">Ganhador Número ${cartela.winnerNumber}</div>`;
                 }
