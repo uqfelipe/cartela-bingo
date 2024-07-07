@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabuleiro de 75 Pedras</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #333;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            margin: 0;
+            padding-top: 400px; /* Espaço suficiente para o tabuleiro fixado */
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(15, 50px);
+            gap: 5px;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 20px;
+            z-index: 1000; /* Garantir que fique acima de outros elementos */
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at top left, #666, #333);
+            border: 2px solid #000;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+            position: relative;
+            cursor: pointer;
+        }
+        .cell:before {
+            content: '';
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .cell.active {
+            background: radial-gradient(circle at top left, #fff, #ccc);
+            color: #000;
+        }
+        .cell.missing {
+            border-color: red;
+            background: radial-gradient(circle at top left, #f00, #800);
+        }
+        /* Border colors for cells */
+        .cell:nth-child(15n+1) { border-color: #8bc34a; } /* Green */
+        .cell:nth-child(15n+2) { border-color: #e91e63; } /* Pink */
+        .cell:nth-child(15n+3) { border-color: #00bcd4; } /* Cyan */
+        .cell:nth-child(15n+4) { border-color: #ffeb3b; } /* Yellow */
+        .cell:nth-child(15n+5) { border-color: #9c27b0; } /* Purple */
+        .cell:nth-child(15n+6) { border-color: #2196f3; } /* Blue */
+        .cell:nth-child(15n+7) { border-color: #ff5722; } /* Orange */
+        .cell:nth-child(15n+8) { border-color: #795548; } /* Brown */
+        .cell:nth-child(15n+9) { border-color: #607d8b; } /* Blue Grey */
+        .cell:nth-child(15n+10) { border-color: #ff9800; } /* Orange */
+        .cell:nth-child(15n+11) { border-color: #03a9f4; } /* Light Blue */
+        .cell:nth-child(15n+12) { border-color: #cddc39; } /* Lime */
+        .cell:nth-child(15n+13) { border-color: #673ab7; } /* Deep Purple */
+        .cell:nth-child(15n+14) { border-color: #3f51b5; } /* Indigo */
+        .cell:nth-child(15n+15) { border-color: #f44336; } /* Red */
+        .cell div {
+            position: relative;
+            z-index: 1;
+        }
+        .cartelas-container {
+            width: 90%;
+            margin: 0 auto;
+        }
+        .cartela {
+            padding: 10px;
+        }
+        .cartela table {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+        .cartela td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+        .cartela td.active {
+            background-color: #00ff00;
+            color: #000;
+        }
+        .cartela td.missing {
+            background-color: #ff0000;
+            color: #fff;
+        }
+        .cartela-id {
+            margin-top: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .winner-tag {
+            margin-top: 5px;
+            font-weight: bold;
+            text-align: center;
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+    <div class="board" id="board">
+        <!-- 75 cells will be generated here -->
+    </div>
+    <div class="cartelas-container" id="cartelasContainer"></div>
+    <!-- Modal -->
+    <div id="winnerModal" class="modal">
+        <div class="modal-content">
+            <p id="winnerMessage"></p>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const board = document.getElementById('board');
+            for (let i = 1; i <= 75; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.onclick = () => toggleActive(cell, i);
+                cell.innerHTML = `<div>${i}</div>`;
+                board.appendChild(cell);
+            }
+            $('#cartelasContainer').slick({
+                infinite: false,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                variableWidth: true,
+            });
+        });
+
+        let cartelas = [];
+        let clickedNumbers = [];
+        let completedCartelas = [];
+        let winnerCount = 0;
+
+        // Load JSON file
+        fetch('cartela.json')
+            .then(response => response.json())
+            .then(data => {
+                cartelas = data.cartelas;
+                checkCartelas();
+            })
+            .catch(error => console.error('Erro ao carregar cartela.json:', error));
+
+        function toggleActive(element, number) {
+            element.classList.toggle('active');
+            if (element.classList.contains('active')) {
+                clickedNumbers.push(number);
+            } else {
+                clickedNumbers = clickedNumbers.filter(n => n !== number);
+            }
+            checkCartelas();
+        }
+
+        function checkCartelas() {
+            const results = cartelas.map(cartela => {
+                const remaining = cartela.numeros.filter(num => !clickedNumbers.includes(num));
+                return { id: cartela.id, remaining: remaining.length, missingNumbers: remaining };
+            });
+
+            const completedResults = results.filter(cartela => cartela.remaining === 0);
+            const incompleteResults = results.filter(cartela => cartela.remaining > 0 && cartela.remaining <= 3);
+
+            completedResults.forEach(winner => {
+                if (!completedCartelas.some(c => c.id === winner.id)) {
+                    winnerCount++;
+                    showModal(`Ganhador! Cartela ID ${winner.id} completada!`);
+                    completedCartelas.push({ ...winner, winnerNumber: winnerCount });
+                }
+            });
+
+            const combinedResults = [...completedCartelas, ...incompleteResults];
+            displayCartelas(combinedResults);
+        }
+
+        function showModal(message) {
+            document.getElementById('winnerMessage').textContent = message;
+            document.getElementById('winnerModal').style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('winnerModal').style.display = "none";
+        }
+
+        // Close the modal when the user clicks anywhere outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('winnerModal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function displayCartelas(cartelasParaMostrar) {
+            const cartelasContainer = $('#cartelasContainer');
+            cartelasContainer.slick('slickRemove', null, null, true);
+            const sortedCartelas = cartelasParaMostrar.sort((a, b) => {
+                if (a.remaining === 0 && b.remaining > 0) return -1;
+                if (a.remaining > 0 && b.remaining === 0) return 1;
+                return a.remaining - b.remaining;
+            });
+            sortedCartelas.forEach(cartela => {
+                const cartelaData = cartelas.find(c => c.id === cartela.id);
+                const cartelaDiv = document.createElement('div');
+                cartelaDiv.classList.add('cartela');
+                let tableContent = '<tr>';
+                for (let i = 0; i < cartelaData.numeros.length; i++) {
+                    if (i > 0 && i % 5 === 0) tableContent += '</tr><tr>';
+                    const isActive = clickedNumbers.includes(cartelaData.numeros[i]);
+                    const isMissing = cartela.missingNumbers.includes(cartelaData.numeros[i]);
+                    tableContent += `<td class="${isActive ? 'active' : ''} ${isMissing ? 'missing' : ''}">${cartelaData.numeros[i]}</td>`;
+                }
+                tableContent += '</tr>';
+                cartelaDiv.innerHTML = `<table>${tableContent}</table><div class="cartela-id">Nº: ${cartelaData.id}</div>`;
+                if (cartela.winnerNumber) {
+                    cartelaDiv.innerHTML += `<div class="winner-tag">Ganhador Número ${cartela.winnerNumber}</div>`;
+                }
+                cartelasContainer.slick('slickAdd', cartelaDiv);
+            });
+        }
+    </script>
+</body>
+</html>
