@@ -14,19 +14,31 @@
             background-color: #333;
             font-family: Arial, sans-serif;
             color: #fff;
-            margin: 10;
-            padding-top: 300px; /* Espaço suficiente para o tabuleiro fixado */
+            margin: 0;
+            height: 100vh; /* Ocupa a altura total da tela */
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            flex: 1;
+        }
+        .board-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000; /* Garantir que fique acima de outros elementos */
         }
         .board {
             display: grid;
             grid-template-columns: repeat(15, 50px);
             gap: 7px;
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-bottom: 20px;
-            z-index: 1000; /* Garantir que fique acima de outros elementos */
+            margin-right: 20px;
         }
         .cell {
             width: 50px;
@@ -83,8 +95,13 @@
             z-index: 1;
         }
         .cartelas-container {
-            width: 90%;
-            margin: 0 auto;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background-color: #222; /* Cor de fundo para diferenciar do restante */
+            padding: 10px 0; /* Espaçamento para as cartelas */
+            z-index: 1000; /* Garantir que fique acima de outros elementos */
         }
         .cartela {
             padding: 10px;
@@ -121,21 +138,52 @@
             color: gold;
         }
         #clickedNumbersContainer {
-            margin-top: 20px;
+            width: 200px;
+            height: 400px;
+            margin-left: 20px;
+            background-color: #222;
+            border: 1px solid #555;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #clickedNumbersFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            color: white; /* Cor do texto para Pedras Marcadas */
+        }
+        #winnerModal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #444;
+            color: #fff; /* Cor do texto branco */
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
-            font-size: 1.2em;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        #winnerModal p {
+            margin: 0;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <div class="board" id="board">
-        <!-- 75 cells will be generated here -->
+    <div class="main-container">
+        <div class="board-container">
+            <div class="board" id="board">
+                <!-- 75 cells will be generated here -->
+            </div>
+            <div id="clickedNumbersContainer">
+                <iframe id="clickedNumbersFrame" src="about:blank"></iframe>
+            </div>
+        </div>
+        <div class="cartelas-container" id="cartelasContainer"></div>
     </div>
-    <div id="clickedNumbersContainer">
-        <h2>Pedras Marcadas:</h2>
-        <p id="clickedNumbersList"></p>
-    </div>
-    <div class="cartelas-container" id="cartelasContainer"></div>
     <!-- Modal -->
     <div id="winnerModal" class="modal">
         <div class="modal-content">
@@ -188,8 +236,10 @@
         }
 
         function updateClickedNumbers() {
-            const clickedNumbersList = document.getElementById('clickedNumbersList');
-            clickedNumbersList.textContent = clickedNumbers.join(', ');
+            const clickedNumbersList = clickedNumbers.join(', ');
+            const frameDoc = document.getElementById('clickedNumbersFrame').contentDocument;
+            frameDoc.body.style.color = 'white'; // Cor do texto para Pedras Marcadas
+            frameDoc.body.innerHTML = `<h3>Pedras Marcadas:</h3><p>${clickedNumbersList}</p>`;
         }
 
         function checkCartelas() {
@@ -199,7 +249,7 @@
             });
 
             const completedResults = results.filter(cartela => cartela.remaining === 0);
-            const incompleteResults = results.filter(cartela => cartela.remaining > 0 && cartela.remaining <= 3);
+            const incompleteResults = results.filter(cartela => cartela.remaining > 0 && cartela.remaining < 4);
 
             completedResults.forEach(winner => {
                 if (!completedCartelas.some(c => c.id === winner.id)) {
@@ -209,7 +259,10 @@
                 }
             });
 
-            const combinedResults = [...completedCartelas, ...incompleteResults];
+            const minRemaining = Math.min(...incompleteResults.map(cartela => cartela.remaining));
+            const filteredResults = incompleteResults.filter(cartela => cartela.remaining === minRemaining);
+
+            const combinedResults = [...completedCartelas, ...filteredResults];
             displayCartelas(combinedResults);
         }
 
