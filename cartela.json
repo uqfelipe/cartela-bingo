@@ -1,26 +1,26 @@
 {
     "cartelas": [
         {
-            "Nome": "Felipe Matheus",
-            "Telefone": "33998352941",
+            "nome": "Felipe Matheus",
+            "telefone": "33998352941",
             "id": "0000001",
             "numeros": [3, 4, 9, 23, 26, 29, 39, 45, 53, 54, 60, 68, 71, 74]
         },
         {
-            "Nome": "Ana Clara",
-            "Telefone": "34987451234",
+            "nome": "Ana Clara",
+            "telefone": "34987451234",
             "id": "0000002",
             "numeros": [1, 5, 10, 15, 20, 25, 30, 35, 40, 50, 55, 65, 70, 75]
         },
         {
-            "Nome": "João Pedro",
-            "Telefone": "31987654321",
+            "nome": "João Pedro",
+            "telefone": "31987654321",
             "id": "0000003",
             "numeros": [2, 6, 11, 16, 21, 27, 32, 37, 42, 47, 52, 57, 62, 67]
         },
         {
-            "Nome": "Maria Luiza",
-            "Telefone": "31991234567",
+            "nome": "Maria Luiza",
+            "telefone": "31991234567",
             "id": "0000004",
             "numeros": [8, 12, 18, 22, 28, 33, 38, 43, 48, 58, 63, 69, 72, 73]
         }
