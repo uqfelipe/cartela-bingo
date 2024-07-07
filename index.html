@@ -1,116 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartela de Bingo</title>
+    <title>Redirecionamento por ID</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             margin: 0;
-            text-align: center;
-        }
-        .header {
-            width: 100%;
-            text-align: left; /* Alinhar o texto à esquerda */
-            margin-bottom: 0; /* Remover margem inferior */
-            padding-bottom: 0; /* Remover padding inferior */
-            padding-left: 10px; /* Adicionar padding à esquerda para um pequeno espaço */
-            font-size: 24px; /* Tamanho da fonte para a linha única */
-            color: red; /* Cor do texto vermelha */
-            font-weight: bold; /* Texto em negrito */
+            background-color: #f0f0f0;
         }
         .container {
-            position: relative;
             width: 100%;
-            height: 100%;
+            height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
         }
-        table {
-            border-collapse: collapse;
+        .form-container {
             width: 100%;
             height: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-        th, td {
-            border: 3px solid black; /* Aumentar espessura da borda */
+        h2 {
             text-align: center;
-            font-size: 60px; /* Aumentar tamanho do texto */
-            background-color: white;
-            cursor: pointer;
-            position: relative; /* Para posicionamento absoluto da imagem */
+            margin-bottom: 20px;
+            font-size: 3em; /* Larger font size */
         }
-        td {
-            width: 20%;
-            height: 33.33%;
-        }
-        .highlight {
-            background-color: green;
-        }
-        .image-cell {
-            position: relative; /* Adicionado para posicionamento relativo */
-        }
-        .image-cell img {
+        form {
+            text-align: center;
             width: 100%;
-            height: auto;
+        }
+        label {
             display: block;
+            margin-bottom: 10px;
+            font-size: 2em; /* Larger font size */
         }
-        .number-overlay {
-            position: absolute;
-            bottom: 5px; /* Posiciona abaixo da imagem */
-            left: 0;
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 20px; /* Increased padding */
+            font-size: 2em; /* Larger font size */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
             width: 100%;
+            padding: 20px; /* Increased padding */
+            font-size: 2em; /* Larger font size */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            font-size: 1.5em;
             text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: red; /* Cor do texto vermelha */
-            text-shadow: 1px 1px 2px black;
-            z-index: 2;
+            margin-top: 20px;
         }
     </style>
-    <script>
-        function toggleHighlight(event) {
-            // Verifica se o elemento clicado é a célula com a classe .image-cell
-            if (event.target.closest('.image-cell')) {
-                return; // Não faz nada se clicar na célula com a imagem
-            }
-            event.target.classList.toggle('highlight');
-        }
-    </script>
 </head>
 <body>
     <div class="container">
-        <table>
-            <tr>
-                <td onclick="toggleHighlight(event)">9</td>
-                <td onclick="toggleHighlight(event)">22</td>
-                <td onclick="toggleHighlight(event)">33</td>
-                <td onclick="toggleHighlight(event)">55</td>
-                <td onclick="toggleHighlight(event)">90</td>
-            </tr>
-            <tr>
-                <td onclick="toggleHighlight(event)">3</td>
-                <td onclick="toggleHighlight(event)">17</td>
-                <td class="image-cell">
-                    <img src="https://img.freepik.com/vetores-premium/vetor-de-modelo-de-design-de-icone-de-logotipo-de-trevo_67715-371.jpg" alt="Image">
-                    <span class="number-overlay">N° 1234567</span>
-                </td>
-                <td onclick="toggleHighlight(event)">65</td>
-                <td onclick="toggleHighlight(event)">83</td>
-            </tr>
-            <tr>
-                <td onclick="toggleHighlight(event)">15</td>
-                <td onclick="toggleHighlight(event)">37</td>
-                <td onclick="toggleHighlight(event)">45</td>
-                <td onclick="toggleHighlight(event)">58</td>
-                <td onclick="toggleHighlight(event)">72</td>
-            </tr>
-        </table>
+        <div class="form-container">
+            <h2>DIGITE O N° DA SUA CARTELA</h2>
+            <form id="redirectForm" action="https://fascinating-dragon-ed3d1e.netlify.app/cartela.html" method="get" onsubmit="handleFormSubmit(event)">
+                <input type="text" id="id" name="id" required><br><br>
+                <input type="submit" value="ACESSAR CARTELA">
+            </form>
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
     </div>
+
+    <script>
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('id').value;
+
+            if (!id) {
+                document.getElementById('errorMessage').style.display = 'block';
+            } else {
+                document.getElementById('errorMessage').style.display = 'none';
+                // Redirect with the ID parameter
+                window.location.href = `cartela.html?id=${id}`;
+            }
+        }
+    </script>
 </body>
 </html>
