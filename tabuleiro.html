@@ -14,15 +14,15 @@
             background-color: #333;
             font-family: Arial, sans-serif;
             color: #fff;
-            margin: 0;
-            padding-top: 400px; /* Espaço suficiente para o tabuleiro fixado */
+            margin: 10;
+            padding-top: 300px; /* Espaço suficiente para o tabuleiro fixado */
         }
         .board {
             display: grid;
             grid-template-columns: repeat(15, 50px);
-            gap: 5px;
+            gap: 7px;
             position: fixed;
-            top: 0;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             margin-bottom: 20px;
@@ -120,11 +120,20 @@
             text-align: center;
             color: gold;
         }
+        #clickedNumbersContainer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
     <div class="board" id="board">
         <!-- 75 cells will be generated here -->
+    </div>
+    <div id="clickedNumbersContainer">
+        <h2>Pedras Marcadas:</h2>
+        <p id="clickedNumbersList"></p>
     </div>
     <div class="cartelas-container" id="cartelasContainer"></div>
     <!-- Modal -->
@@ -174,7 +183,13 @@
             } else {
                 clickedNumbers = clickedNumbers.filter(n => n !== number);
             }
+            updateClickedNumbers();
             checkCartelas();
+        }
+
+        function updateClickedNumbers() {
+            const clickedNumbersList = document.getElementById('clickedNumbersList');
+            clickedNumbersList.textContent = clickedNumbers.join(', ');
         }
 
         function checkCartelas() {
